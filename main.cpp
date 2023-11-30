@@ -313,3 +313,93 @@ double calculate(mystack<double> postfix)
         return result.topp();
     return result.topp()*(-1);
 }
+//*********************************************************************************************************
+bool isvalidparanthes(string exp)
+{
+    mystack<char> temp ;
+    for (int i = 0; i < exp.length(); i++) 
+    {
+        if (exp[i] == ')' || exp[i] == '(')
+        {
+            if (temp.isempty() == true) 
+            {
+                temp.push(exp[i]);
+            }
+            else if ((temp.topp() == '(' && exp[i] == ')') ) 
+            {
+                temp.pop();
+            }
+            else 
+            {
+                temp.push(exp[i]);
+            }
+        } 
+    }
+    if (temp.isempty()) 
+    {
+        return true;
+    }
+    return false;
+}
+//******************************************************************************************
+
+bool isvalidoper(string exp)
+{
+    for (int i = 0; i < exp.length(); i++)
+    {
+
+        if (exp[i] == '+' || exp[i] == '*' || exp[i] == '^' || exp[i] == '/')
+        {
+            if (i == 0)
+                return false ;
+            else if(i == exp.length()-1)
+                return false ;
+            else
+            {
+                if (exp[i-1] != 'I' && exp[i-1] != 'e' && exp[i-1] != ')' && exp[i-1] != '!' && !isdigit(exp[i-1]))
+                {
+                    return false ;
+                }
+                else if (exp[i+1] != 'P' && exp[i+1] != 'e' && exp[i+1] != '(' && !isdigit(exp[i+1]))
+                {
+                   return false ; 
+                }
+            }
+        }
+        else if (exp[i] == '!')
+        {
+            if (!isdigit(exp[i-1]) && exp[i-1] != ')')
+                return false;
+            if (isdigit(exp[i+1]) || exp[i+1] == 'P' || exp[i+1] == 'e' || exp[i+1] == '(')
+                return false;
+        }
+        else if (exp[i] == '-')
+        {
+            if(i == exp.length()-1)
+                return false ;
+            else if (exp[i+1] != 'P' && exp[i+1] != 'e' && exp[i+1] != '(' && !isdigit(exp[i+1]))
+                return false ;
+            }
+        }
+    return true ;
+}
+//*************************************************************************************************
+
+int main() 
+{
+    string input ;
+    cin >> input ;
+    if (isvalidparanthes(input) == false)
+    {
+        cout << "error" ;
+        return 0 ;
+    }
+    else if (isvalidoper(input) == false)
+    {
+        cout << "error" ;
+        return 0 ;
+    }
+    mystack<double> postfixStack = convert(input);
+    double result = calculate(postfixStack);
+    cout << "Result: " << result << endl;   
+}
