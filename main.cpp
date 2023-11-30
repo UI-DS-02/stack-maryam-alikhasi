@@ -245,3 +245,71 @@ mystack<double> convert(string expr)
     }
     return result;
 }
+
+double calculate(mystack<double> postfix)
+{
+    mystack<double> result;
+    int manfi = 0 ;
+    while(!postfix.isempty())
+    {
+        float top = postfix.topp();
+        postfix.pop();
+        if(top == '+' || top == '-' || top ==  '*' || top == '^' || top == '!' || top == '/')
+        {
+            float a=result.topp();
+            result.pop();
+            double b;
+            if(top!='!')
+            {
+                b=result.topp();
+                result.pop();
+            }
+            if(top=='^')
+            {
+                result.push(pow(b,a));
+                cout << b << "^" << a << " = " << pow(b,a) << endl ;
+            }
+            else if(top=='+')
+            {
+                result.push(b+a);
+                cout << b << "+" << a << " = " << b+a << endl ;
+            }
+            else if(top=='-')
+            {
+                result.push(b-a);
+                cout << b << "-" << a << " = " << b-a << endl ;
+            }
+            else if(top=='/')
+            {
+                if (a == 0)
+                {
+                    cout << "error" ;
+                    exit(0);
+                }
+                result.push(b/a);
+                cout << b << "/" << a << " = " << b/a << endl ;
+            }
+            else if(top=='*'){
+                result.push(b*a);
+                cout << b << "*" << a << " = " << b*a << endl ;
+            }
+            else if(top=='!')
+            {
+                result.push(factorial(a));
+                cout << a << "!" << " = " << factorial(a) << endl ;
+            }
+            if(postfix.top != -1 && postfix.topp() == '-' && result.size() != 2)  
+            {
+                manfi++;
+                postfix.pop();
+            }
+        }
+        else
+        {
+            result.push(top);
+        }
+    }
+    if(manfi % 2 == 0)
+        return result.topp();
+    return result.topp()*(-1);
+}
